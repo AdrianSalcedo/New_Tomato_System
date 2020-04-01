@@ -21,7 +21,7 @@ Forward-Backward Sweep Method for the problem
 
 class ForwardBackwardSweep(OptimalControlProblem):
     
-    def __init__(self, eps=.00001, n_max=10000):
+    def __init__(self, eps=.0001, n_max=10000):
         """
         :type t_0: initial time
         """
@@ -123,10 +123,10 @@ class ForwardBackwardSweep(OptimalControlProblem):
         return [x, lambda_, u]
     
     def control_cost(self, x_k, u_k):
-        b_1 = self.b_1
-        b_2 = self.b_2
-        b_3 = self.b_3
-        b_4 = self.b_4
+        A_1 = self.A_1
+        A_2 = self.A_2
+        A_3 = self.A_3
+        A_4 = self.A_4
         c_1 = self.c_1
         c_2 = self.c_2
         c_3 = self.c_3
@@ -146,8 +146,8 @@ class ForwardBackwardSweep(OptimalControlProblem):
         j_cost = np.zeros(n_max)
         
         for i in np.arange(n_max - 1):
-            j_cost_i = b_1 * latent_young[i] + b_2 * infected_young[i] + b_3 * infected_adult[i] \
-                       + b_4 * infected_vector[i] + 0.5 * c_1 * (u_1[i]) ** 2 \
+            j_cost_i = A_1 * latent_young[i] + A_2 * infected_young[i] + A_3 * infected_adult[i] \
+                       + A_4 * infected_vector[i] + 0.5 * c_1 * (u_1[i]) ** 2 \
                        + 0.5 * c_2 * (u_2[i]) ** 2 + 0.5 * c_3 * (u_3[i]) ** 2 \
                        + 0.5 * c_4 * (u_4[i]) ** 2
             j_cost[i + 1] = j_cost[i] + j_cost_i * h

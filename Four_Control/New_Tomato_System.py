@@ -46,7 +46,7 @@ import numpy as np
 
 class OptimalControlProblem(object):
     def __init__(self, t_0=0.0, t_f=70.0, dynamics_dim=8, control_dim=4,
-                 s_y_p_zero=0.7, s_a_p_zero=0.3, l_y_p_zero=0.0, l_a_p_zero=0.0, i_y_p_zero=0.0, i_a_p_zero=0.0,
+                 s_y_p_zero=1.0, s_a_p_zero=0.0, l_y_p_zero=0.0, l_a_p_zero=0.0, i_y_p_zero=0.0, i_a_p_zero=0.0,
                  s_v_zero=0.92, i_v_zero=0.08
                  ):
         # Parameters for the test example
@@ -90,16 +90,16 @@ class OptimalControlProblem(object):
         self.A_2 = 1.0
         self.A_3 = 1.0
         self.A_4 = 1.0
-        self.c_1 = 0.1
-        self.c_2 = 0.1
-        self.c_3 = 0.1
-        self.c_4 = 0.1
+        self.c_1 = 0.5
+        self.c_2 = 0.5
+        self.c_3 = 0.5
+        self.c_4 = 0.5
         self.u_1_lower = 0.0
         self.u_1_upper = 0.4
-        self.u_2_lower = 0.02
-        self.u_2_upper = 0.03
-        self.u_3_lower = 0.03
-        self.u_3_upper = 0.3
+        self.u_2_lower = 0.0
+        self.u_2_upper = 0.7
+        self.u_3_lower = 0.0
+        self.u_3_upper = 0.6
         self.u_4_lower = 0.0
         self.u_4_upper = 0.5
     
@@ -187,7 +187,7 @@ class OptimalControlProblem(object):
         rhs_l_a_p = beta_a_p * s_a_p * i_v - b_a * l_a_p
         rhs_i_y_p = b_y * l_y_p - (r_y_2 + u_2 ) * i_y_p
         rhs_i_a_p = b_a * l_a_p - (r_a + u_3 ) * i_a_p
-        rhs_s_v = - beta_y_v * s_v * i_y_p - beta_a_v * s_v * i_a_p - (gamma + u_4 ) * s_v + (1-theta) *  mu
+        rhs_s_v = - beta_y_v * s_v * i_y_p - beta_a_v * s_v * i_a_p - (gamma + u_4 ) * s_v + (1-theta) * mu
         rhs_i_v = beta_y_v * s_v * i_y_p + beta_a_v * s_v * i_a_p - (gamma + u_4) * i_v + theta * mu
 
         rhs_pop = np.array([rhs_s_y_p, rhs_s_a_p, rhs_l_y_p, rhs_l_a_p, rhs_i_y_p, rhs_i_a_p, rhs_s_v, rhs_i_v])
@@ -302,9 +302,9 @@ class OptimalControlProblem(object):
         lambda_7 = lambda_k[:, 6]
         lambda_8 = lambda_k[:, 7]
         
-        aux_1 = l_y_p * (lambda_3 - lambda_1) / (2 * c_1)
-        aux_2 = i_y_p * (lambda_5 - lambda_1) / (2 * c_2)
-        aux_3 = i_a_p * (lambda_6 - lambda_1) / (2 * c_3)
+        aux_1 = (l_y_p * (lambda_3 - lambda_1)) / (2 * c_1)
+        aux_2 = (i_y_p * (lambda_5 - lambda_1)) / (2 * c_2)
+        aux_3 = (i_a_p * (lambda_6 - lambda_1)) / (2 * c_3)
         aux_4 = (lambda_7 * s_v + lambda_8 * i_v) / (2 * c_4)
 
         positive_part_1 = np.max([u_1_lower * np.ones(n_max), aux_1], axis=0)

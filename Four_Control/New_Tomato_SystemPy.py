@@ -1,5 +1,6 @@
 from forward_backward_sweep import ForwardBackwardSweep
 from matplotlib import rcParams
+from scipy.integrate import odeint
 import pandas as pd
 
 # rcParams['font.family'] = 'sans-serif'
@@ -27,8 +28,8 @@ beta_y_p = 0.5
 r_y_1 = 0.004
 r_y_2 = 0.003
 r_a = 0.003
-alpha = 0.2
-beta_a_p = 0.5
+alpha = 1/60
+beta_a_p = 0.1
 b_y = 0.025
 b_a = 0.050
 beta_y_v = 0.00015
@@ -39,8 +40,8 @@ mu = 0.3
 #
 #
 # Initial conditions
-s_y_p_zero = 0.7
-s_a_p_zero = 0.3
+s_y_p_zero = 1.0
+s_a_p_zero = 0.0
 l_y_p_zero = 0.0
 l_a_p_zero = 0.0
 i_y_p_zero = 0.0
@@ -68,19 +69,50 @@ fbsm.set_parameters(beta_y_p, r_y_1, r_y_2, r_a, alpha, beta_a_p, b_y,
                        s_y_p_zero, s_a_p_zero, l_y_p_zero, l_a_p_zero, i_y_p_zero, i_a_p_zero, s_v_zero, i_v_zero)
 
 t = fbsm.t
-x_wc = fbsm.runge_kutta_forward(fbsm.u)
+
+x_wc_1 = fbsm.runge_kutta_forward(fbsm.u)
 #
 [x, lambda_, u] = fbsm.forward_backward_sweep()
+cost = fbsm.control_cost(fbsm.x,u)
+#plt.plot(t,cost,'k')
+#plt.show()
+########################################################################################################################
+#def rhs(y, t_zero):
+#    s_j_p = y[0]
+#    s_a_p = y[1]
+#   l_j_p = y[2]
+#    l_a_p = y[3]
+#    i_j_p = y[4]
+#    i_a_p = y[5]
+#    s_v = y[6]
+#    i_v = y[7]
+
+#    s_j_p_prime = - beta_y_p * s_j_p * i_v + r_y_1 * l_j_p + r_y_2 * i_j_p+ r_a * i_a_p - alpha * s_j_p
+#    s_a_p_prime = - beta_a_p * s_a_p * i_v + alpha * s_j_p
+#    l_j_p_prime = beta_y_p * s_j_p * i_v - b_y * l_j_p - r_y_1 * l_j_p
+#    l_a_p_prime = beta_a_p * s_a_p * i_v - b_a * l_a_p
+#    i_j_p_prime = b_y * l_j_p - r_y_2 * i_j_p
+#    i_a_p_prime = b_a * l_a_p - r_a * i_a_p
+#    s_v_prime = - beta_y_v * s_v * i_j_p - beta_a_v * s_v * i_a_p - gamma * s_v + (1-theta) *  mu
+#    i_v_prime = beta_y_v * s_v * i_j_p + beta_a_v * s_v * i_a_p - gamma * i_v + theta * mu
+#    rhs_np_array = np.array([s_j_p_prime, s_a_p_prime, l_j_p_prime, l_a_p_prime, i_j_p_prime, i_a_p_prime, s_v_prime, i_v_prime])
+#    return (rhs_np_array)
+#y_zero = np.array([1.0, 0.0, 0.0, 0.0, 0.0 , 0.0, 0.92, 0.08])
+#sol = odeint(rhs, y_zero, t)
+
+########################################################################################################################
 
 mpl.style.use('ggplot')
 # plt.ion()
 # n_whole = fbsm.n_whole
 ax1 = plt.subplot2grid((4, 2), (0, 0), rowspan=4)
-ax1.plot(t, x_wc[:, 4],
+#ax1.plot(t, sol[:, 4], 'b')
+#ax1.plot(t, sol[:, 5], 'b')
+ax1.plot(t, x_wc_1[:, 4],
          label="Infected young without control",
-         color='black'
+         color='gray'
          )
-ax1.plot(t, x_wc[:, 5],
+ax1.plot(t, x_wc_1[:, 5],
          label="Infected adult without control",
          color='darkgreen'
          )
