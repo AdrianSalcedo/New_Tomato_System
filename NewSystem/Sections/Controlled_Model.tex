@@ -1,0 +1,51 @@
+\section{Controlled Model}
+
+	\begin{align}
+		\dot{S^y_p} &= -\beta^y_p S^y_p I_v + (r^1_y + u_1(t)) L^y_p + (r^2_y+u_2(t)) I^y_p + (r_a+u_3(t)) I^a_p-\alpha S^y_p\\
+		\dot{S^a_p} &= -\beta^a_p S^a_p I_v + \alpha S^y_p\\
+		\dot{L^y_p} &= \beta^y_p S^y_p I_v - b_y L^y_p - (r^1_y+u_1(t)) L^y_p\\
+		\dot{L^a_p} &= \beta^a_p S^a_p I_v -b_a L^a_p\\
+		\dot{I^y_p} &= b_y L^J_p - (r^2_y+u_2(t)) I^y_p\\
+		\dot{I^a_p} &= b_a L^a_p - (r_a+u_3(t)) I^a_p\\
+		\dot{S_v} &= -\beta^y_v S_v I^y_p - \beta^a_v S_v I^a_p -(\gamma+u_4(t)) S_v +(1-\theta) \mu \\
+		\dot{I_v} &= \beta^y_v S_v I^y_p + \beta^a_v S_v I^a_p - (\gamma+u_4(t)) I_v +\theta \mu
+	\end{align}
+	
+	We need minimize the following functional cost
+	
+	\begin{equation}
+		\begin{aligned}
+			J(x,u) &= \int^T_0(A_1L^y_p+A_2I^y_p+A_3 I^a_p+A_4I_v+c_1u_1^2(t)\\
+			&+ c_2u_2^2(t)+c_3u_3^2(t)+c_4u_4^2(t))dt
+		\end{aligned}
+	\end{equation}
+	
+	By the Pontryagain's principle theorem we have the following adjoint system
+	\begin{align}
+		\dot{\lambda_1} &= \alpha (\lambda_2 -\lambda_1) + \beta^y_p I_v (\lambda_3 - \lambda_1) \\
+		\dot{\lambda_2} &= \beta^a_p I_v (\lambda_4-\lambda_2)\\
+		\dot{\lambda_3} &= A_1 + r^1_y (\lambda_1 - \lambda_3) + u_1 ( \lambda_1-\lambda_3)+ b_y (\lambda_5-\lambda_3)\\
+		\dot{\lambda_4} &= b_a (\lambda_6 -\lambda_4)\\
+		\dot{\lambda_5} &= A_2 + (r^2_y +u_2)(\lambda_1-\lambda_5) + \beta^y_v S_v(\lambda_8-\lambda_7)\\
+		\dot{\lambda_6} &= A_3 + (r_a + u_3)(\lambda_1-\lambda_6)+ \beta^a_v S_v (\lambda_8- \lambda_7)\\
+		\dot{\lambda_7} &=  (\beta^y_v I^y_p + \beta^a_v I^a_p)(\lambda_8-\lambda_7) - (\gamma+u_4)\lambda_7\\
+		\dot{\lambda_8} &= A_4 + \beta^y_p S^y_p (\lambda_3-\lambda_1) + \beta^a_p S^a_p (\lambda_4-\lambda_2)-(\gamma +u_4)\lambda_8
+	\end{align}
+
+and the optimallity condition is given by :
+	
+	\begin{equation}
+		\bar{u_1} = \frac{\bar{L^y_p}(\lambda_3-\lambda_1)}{2c_1}
+	\end{equation}
+	
+	\begin{equation}
+		\bar{u_2} = \frac{\bar{I^y_p}(\lambda_5 -\lambda_1)}{2c_2}
+	\end{equation}
+	
+	\begin{equation}
+		\bar{u_3} = \frac{\bar{I^a_p}(\lambda_6-\lambda_1)}{2c_3}
+	\end{equation}
+	
+	\begin{equation}
+		\bar{u_4} = \frac{\bar{S_v}\lambda_7 +\bar{I_v}\lambda_8}{2c_4}
+	\end{equation}
