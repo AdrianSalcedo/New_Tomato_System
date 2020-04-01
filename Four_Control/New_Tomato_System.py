@@ -45,7 +45,7 @@ import numpy as np
 
 
 class OptimalControlProblem(object):
-    def __init__(self, t_0=0.0, t_f=70.0, dynamics_dim=8, control_dim=4,
+    def __init__(self, t_0=0.0, t_f=140.0, dynamics_dim=8, control_dim=4,
                  s_y_p_zero=1.0, s_a_p_zero=0.0, l_y_p_zero=0.0, l_a_p_zero=0.0, i_y_p_zero=0.0, i_a_p_zero=0.0,
                  s_v_zero=0.92, i_v_zero=0.08
                  ):
@@ -59,7 +59,7 @@ class OptimalControlProblem(object):
         self.r_y_1 = 0.004
         self.r_y_2 = 0.003
         self.r_a = 0.003
-        self.alpha = 0.2
+        self.alpha = 0.02
         self.beta_a_p = 0.5
         self.b_y = 0.025
         self.b_a = 0.050
@@ -95,13 +95,13 @@ class OptimalControlProblem(object):
         self.c_3 = 0.5
         self.c_4 = 0.5
         self.u_1_lower = 0.0
-        self.u_1_upper = 0.4
+        self.u_1_upper = 2.0
         self.u_2_lower = 0.0
-        self.u_2_upper = 0.7
+        self.u_2_upper = 2.0
         self.u_3_lower = 0.0
-        self.u_3_upper = 0.6
+        self.u_3_upper = 2.0
         self.u_4_lower = 0.0
-        self.u_4_upper = 0.5
+        self.u_4_upper = 2.0
     
     def set_parameters(self, beta_y_p, r_y_1, r_y_2, r_a, alpha, beta_a_p, b_y,
                        b_a, beta_y_v, beta_a_v, gamma, theta, mu,

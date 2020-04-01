@@ -27,8 +27,8 @@ import numpy as np
 beta_y_p = 0.5
 r_y_1 = 0.004
 r_y_2 = 0.003
-r_a = 0.003
-alpha = 1/60
+r_a = 0.017
+alpha = 0.02
 beta_a_p = 0.1
 b_y = 0.025
 b_a = 0.050
@@ -117,10 +117,10 @@ ax1.plot(t, x_wc_1[:, 5],
          color='darkgreen'
          )
 ax1.plot(t, x[:, 4],
-         label="Optimal controlled",
+         label="Optimal controlled young",
          color='red')
 ax1.plot(t, x[:, 5],
-         label="Optimal controlled",
+         label="Optimal controlled adult",
          color='orange')
 ax1.set_ylabel(r'Infected plants ratio')
 ax1.set_xlabel(r'Time (days)')
