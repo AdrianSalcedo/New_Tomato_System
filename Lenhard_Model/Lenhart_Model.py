@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 ########################################################################################################################
 def f_function(y, t):
     S = y[0]
-    I = y[0]
-    U = y[0]
-    W = y[0]
+    I = y[1]
+    U = y[2]
+    W = y[3]
     N= S + I
     V= U+ W
 
     S_prime = b * (S /( S + epsilon * I)) * S * ( 1- N / theta) - beta * S * W - h * S + g * I
     I_prime = b * (epsilon * I /(S + epsilon * I)) * I * ( 1- N / theta) + beta * S * W - (alpha + h + g ) * I
-    U_prime = a* V * (1 - (V / (kappa * N))) - gamma * I * U - ( mu+ c)  * U
+    U_prime = a * V * (1 - (V / (kappa * N))) - gamma * I * U - ( mu+ c)  * U
     W_prime = gamma * I * U - (mu + c ) * W
     deterministic_part = np.array([ S_prime, I_prime, U_prime, W_prime])
     return deterministic_part
