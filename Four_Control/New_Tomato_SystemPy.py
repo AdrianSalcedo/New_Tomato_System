@@ -74,8 +74,18 @@ x_wc_1 = fbsm.runge_kutta_forward(fbsm.u)
 #
 [x, lambda_, u] = fbsm.forward_backward_sweep()
 cost = fbsm.control_cost(fbsm.x,u)
+
 #plt.plot(t,cost,'k')
 #plt.show()
+########################################################################################################################
+########################################## R_0 Computation #############################################################
+########################################################################################################################
+
+R_0 = np.sqrt(beta_y_p/gamma)*np.sqrt((beta_y_v * mu * b_y)/(gamma * (b_y * r_y_2 + r_y_1 * r_y_2)))
+
+print(R_0)
+########################################################################################################################
+########################################################################################################################
 ########################################################################################################################
 #def rhs(y, t_zero):
 #    s_j_p = y[0]
@@ -106,19 +116,18 @@ mpl.style.use('ggplot')
 # plt.ion()
 # n_whole = fbsm.n_whole
 ax1 = plt.subplot2grid((4, 2), (0, 0), rowspan=4)
-#ax1.plot(t, sol[:, 4], 'b')
-#ax1.plot(t, sol[:, 5], 'b')
-ax1.plot(t, x_wc_1[:, 4],
-         label="Infected young without control",
-         color='gray'
-         )
+#ax1.plot(t, x_wc_1[:, 4],
+#         label="Infected adult without control",
+#         color='gray'
+#         )
 ax1.plot(t, x_wc_1[:, 5],
          label="Infected adult without control",
          color='darkgreen'
          )
-ax1.plot(t, x[:, 4],
-         label="Optimal controlled young",
-         color='red')
+#ax1.plot(t, x[:, 4],
+#         label="Optimal controlled adult",
+#         color='red'
+#         )
 ax1.plot(t, x[:, 5],
          label="Optimal controlled adult",
          color='orange')
@@ -128,7 +137,7 @@ ax1.legend(loc=0)
 ax2 = plt.subplot2grid((4, 2), (0, 1))
 ax2.plot(t, u[:, 0],
          label="$u_1(t)$ : Remove latent young plants",
-         color='orange')
+         color='darkgreen')
 ax2.set_ylabel(r'$u_1(t)$')
 ax2.set_xlabel(r'Time(days)')
 ax3 = plt.subplot2grid((4, 2), (1, 1))
@@ -157,7 +166,21 @@ fig.savefig(name_file_1,
             # additional_artists=art,
             bbox_inches="tight")
 #######################################################################################################################
-#plt.figure()
+plt.figure()
+plt.plot(t,cost,'k')
+plt.xlabel(r'Time(days)')
+plt.ylabel(r'Cost')
+
+plt.figure()
+plt.plot(t,x[:,0], label="young susceptible")
+plt.plot(t,x[:,1], label="adult susceptible")
+plt.plot(t,x[:,2], label="young latent")
+plt.plot(t,x[:,3], label="adult latent")
+plt.plot(t,x[:,4], label="young infected")
+plt.plot(t,x[:,5], label="adult infected")
+plt.xlabel(r'Time(days)')
+plt.ylabel(r'Proportion of plant')
+plt.legend(loc=0)
 #Cost_value = (A_1 * x[:, 2] + A_2 * x[:, 1]+ A_3 * x[:, 4]+ c_1 * u[:, 0] ** 2 + c_2 * u[:, 1] ** 2) * (365 / 10000)
 
 #Int_Cost_value = np.cumsum(Cost_value)
