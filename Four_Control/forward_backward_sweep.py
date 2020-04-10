@@ -21,7 +21,7 @@ Forward-Backward Sweep Method for the problem
 
 class ForwardBackwardSweep(OptimalControlProblem):
     
-    def __init__(self, eps=.00001, n_max=50000):
+    def __init__(self, eps=.00001, n_max=10000):
         """
         :type t_0: initial time
         """

@@ -55,7 +55,7 @@ class OptimalControlProblem(object):
         self.dynamics_dim = dynamics_dim
         self.control_dim = control_dim
         #
-        self.beta_y_p = 0.5
+        self.beta_y_p = 0.025
         self.r_y_1 = 0.04
         self.r_y_2 = 0.03
         self.r_a = 0.003
@@ -82,7 +82,7 @@ class OptimalControlProblem(object):
         self.i_v_zero = i_v_zero
 
         self.n_p_whole = s_y_p_zero + l_y_p_zero + i_y_p_zero + s_a_p_zero + l_a_p_zero + i_a_p_zero
-        self.lambda_final = np.array([0.0, 0.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.lambda_final = np.array([0.0, 8000, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         #self.lambda_final = np.zeros([1, dynamics_dim])
         #
         # Functional Cost
@@ -96,13 +96,13 @@ class OptimalControlProblem(object):
         self.c_3 = 0.5
         self.c_4 = 0.5
         self.u_1_lower = 0.0
-        self.u_1_upper = 2.0
+        self.u_1_upper = 1.0
         self.u_2_lower = 0.0
-        self.u_2_upper = 2.0
+        self.u_2_upper = 1.0
         self.u_3_lower = 0.0
-        self.u_3_upper = 2.0
+        self.u_3_upper = 1.0
         self.u_4_lower = 0.0
-        self.u_4_upper = 2.0
+        self.u_4_upper = 1.0
     
     def set_parameters(self, beta_y_p, r_y_1, r_y_2, r_a, alpha, beta_a_p, b_y,
                        b_a, beta_y_v, beta_a_v, gamma, theta, mu,
