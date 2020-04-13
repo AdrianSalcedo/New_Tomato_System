@@ -37,8 +37,9 @@ def rhs_ntw_solve(y_zero, par, t):
         l_a_p_prime = (beta_a_p * s_a_p * i_v - b_a * l_a_p) / N_p
         i_j_p_prime = (b_y * l_j_p - r_y_2 * i_j_p) / N_p
         i_a_p_prime = (b_a * l_a_p - r_a * i_a_p) / N_p
-        s_v_prime = (- beta_y_v * s_v * i_j_p - beta_a_v * s_v * i_a_p - gamma * s_v + (1-theta) *  mu) / N_v
-        i_v_prime = (beta_y_v * s_v * i_j_p + beta_a_v * s_v * i_a_p - gamma * i_v + theta * mu) / N_v
+        s_v_prime = - beta_y_v * s_v * i_j_p * N_p - beta_a_v * s_v * i_a_p * N_p - gamma * s_v + (1-theta) *  mu
+        i_v_prime = beta_y_v * s_v * i_j_p * N_p + beta_a_v * s_v * i_a_p * N_p - gamma * i_v + theta * mu
+
         rhs_np_array = np.array([s_j_p_prime, s_a_p_prime, l_j_p_prime, l_a_p_prime, i_j_p_prime, i_a_p_prime, s_v_prime, i_v_prime])
         return (rhs_np_array)
 

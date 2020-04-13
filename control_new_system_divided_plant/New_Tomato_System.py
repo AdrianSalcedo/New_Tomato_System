@@ -82,7 +82,7 @@ class OptimalControlProblem(object):
         self.i_v_zero = i_v_zero
 
         self.n_p_whole = s_y_p_zero + l_y_p_zero + i_y_p_zero + s_a_p_zero + l_a_p_zero + i_a_p_zero
-        self.lambda_final = np.array([0.0, 8000, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.lambda_final = np.array([0.0, 0.8, 0.0, 0.0, 0.0, 0.2, 0.3, 0.2])
         #self.lambda_final = np.zeros([1, dynamics_dim])
         #
         # Functional Cost
@@ -189,8 +189,8 @@ class OptimalControlProblem(object):
         rhs_l_a_p = (beta_a_p * s_a_p * i_v - b_a * l_a_p) / n_p_whole
         rhs_i_y_p = (b_y * l_y_p - (r_y_2 + u_2 ) * i_y_p) / n_p_whole
         rhs_i_a_p = (b_a * l_a_p - (r_a + u_3 ) * i_a_p) / n_p_whole
-        rhs_s_v = (- beta_y_v * s_v * i_y_p - beta_a_v * s_v * i_a_p - (gamma + u_4 ) * s_v + (1-theta) * mu)/ n_v_whole
-        rhs_i_v = (beta_y_v * s_v * i_y_p + beta_a_v * s_v * i_a_p - (gamma + u_4) * i_v + theta * mu) / n_v_whole
+        rhs_s_v = - beta_y_v * s_v * i_y_p * n_p_whole - beta_a_v * s_v * i_a_p *  n_p_whole - (gamma + u_4) * s_v + (1-theta) * mu
+        rhs_i_v = beta_y_v * s_v * i_y_p *  n_p_whole + beta_a_v * s_v * i_a_p * n_p_whole - (gamma + u_4) * i_v + theta * mu
 
         rhs_pop = np.array([rhs_s_y_p, rhs_s_a_p, rhs_l_y_p, rhs_l_a_p, rhs_i_y_p, rhs_i_a_p, rhs_s_v, rhs_i_v])
         self.n_p_whole = n_p_whole
@@ -206,7 +206,6 @@ class OptimalControlProblem(object):
         beta_a_p = self.beta_a_p
         b_y = self.b_y
         b_a = self.b_a
-        r_a = self.r_a
         beta_y_v = self.beta_y_v
         beta_a_v = self.beta_a_v
         gamma = self.gamma
@@ -247,19 +246,19 @@ class OptimalControlProblem(object):
         lambda_7 = lambda_k[0, 6]
         lambda_8 = lambda_k[0, 7]
 
-        rhs_l_1 = alpha * (lambda_2-lambda_1) + beta_y_p * (i_v / n_v_whole) * (lambda_3 - lambda_1)
+        rhs_l_1 = alpha * (lambda_2-lambda_1) + beta_y_p * i_v * (lambda_3 - lambda_1)
 
-        rhs_l_2 = beta_a_p * (i_v / n_v_whole) * (lambda_4 - lambda_2)
+        rhs_l_2 = beta_a_p * i_v * (lambda_4 - lambda_2)
 
-        rhs_l_3 = A_1 + r_y_1 * (lambda_1 - lambda_3) + u_1 * (lambda_1 - lambda_3) + b_y * (lambda_5 - lambda_3)
+        rhs_l_3 = A_1 + ( r_y_1 + u_1 ) * (lambda_1 - lambda_3) + b_y * (lambda_5 - lambda_3)
 
         rhs_l_4 = b_a * (lambda_6 - lambda_4)
 
-        rhs_l_5 = A_2 + (r_y_2 + u_2) * (lambda_1 - lambda_5) + beta_y_v * (s_v / n_v_whole) * (lambda_8 - lambda_7)
+        rhs_l_5 = A_2 + (r_y_2 + u_2) * (lambda_1 - lambda_5) + beta_y_v * s_v * n_p_whole * (lambda_8 - lambda_7)
 
-        rhs_l_6 = A_3 + (r_a + u_3) * (lambda_1 - lambda_6) + beta_a_v * (s_v / n_v_whole) * (lambda_8 - lambda_7)
+        rhs_l_6 = A_3 + (r_a + u_3) * (lambda_1 - lambda_6) + beta_a_v * s_v * n_p_whole * (lambda_8 - lambda_7)
 
-        rhs_l_7 = (beta_y_v * (i_y_p / n_p_whole) + beta_a_v * (i_a_p / n_p_whole)) * (lambda_8 - lambda_7) - (gamma + u_4) * lambda_7
+        rhs_l_7 = (beta_y_v * (i_y_p * n_p_whole) + beta_a_v * (i_a_p * n_p_whole)) * (lambda_8 - lambda_7) - (gamma + u_4) * lambda_7
 
         rhs_l_8 = A_4 + beta_y_p * (s_y_p / n_p_whole) * (lambda_3 - lambda_1) + beta_a_p * (s_a_p / n_p_whole) * (lambda_4 - lambda_2) - (gamma + u_4) * lambda_8
 
@@ -295,6 +294,7 @@ class OptimalControlProblem(object):
         i_a_p = x_k[:, 5]
         s_v = x_k[:, 6]
         i_v = x_k[:, 7]
+        n_p_whole = s_y_p + l_y_p + i_y_p + s_a_p + l_a_p + i_a_p
 
         lambda_1 = lambda_k[:, 0]
         lambda_2 = lambda_k[:, 1]
@@ -305,9 +305,9 @@ class OptimalControlProblem(object):
         lambda_7 = lambda_k[:, 6]
         lambda_8 = lambda_k[:, 7]
         
-        aux_1 = (l_y_p * (lambda_3 - lambda_1)) / (2 * c_1)
-        aux_2 = (i_y_p * (lambda_5 - lambda_1)) / (2 * c_2)
-        aux_3 = (i_a_p * (lambda_6 - lambda_1)) / (2 * c_3)
+        aux_1 = ((l_y_p / n_p_whole) * (lambda_3 - lambda_1)) / (2 * c_1)
+        aux_2 = ((i_y_p / n_p_whole) * (lambda_5 - lambda_1)) / (2 * c_2)
+        aux_3 = ((i_a_p / n_p_whole) * (lambda_6 - lambda_1)) / (2 * c_3)
         aux_4 = (lambda_7 * s_v + lambda_8 * i_v) / (2 * c_4)
 
         positive_part_1 = np.max([u_1_lower * np.ones(n_max), aux_1], axis=0)
